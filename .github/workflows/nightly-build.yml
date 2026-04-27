@@ -4,8 +4,9 @@ on:
       - master
     paths:
       - "**/*.go"
-      - "go.mod"
-      - "go.sum"
+      - "go.work"
+      - "src/go.mod"
+      - "src/go.sum"
       - "Makefile"
       - ".github/workflows/nightly-build.yml"
   pull_request:
@@ -14,8 +15,9 @@ on:
       - master
     paths:
       - "**/*.go"
-      - "go.mod"
-      - "go.sum"
+      - "go.work"
+      - "src/go.mod"
+      - "src/go.sum"
       - "Makefile"
       - ".github/workflows/nightly-build.yml"
 name: nightly-build

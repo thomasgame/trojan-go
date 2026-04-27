@@ -22,6 +22,11 @@ Trojan-Go**客户端**可以接受URL，以定位服务器资源。原则如下:
 
 需要注意，基于人类可读性的考虑，禁止将 base64 等编码数据嵌入 URL 中。首先， base64 编码不能保证传输安全，其意义在于在 ASCII 信道传输非 ASCII 数据。其次，如果需要保证分享 URL 时的传输安全，请对明文 URL 进行加密，而不是修改 URL 格式。
 
+当前实现上：
+
+- URL 解析逻辑位于 `src/pkg/sharelink`
+- URL 模式的 CLI 入口位于 `src/internal/app/features/urlmode`
+
 ## 格式
 
 基本格式如下，`$()` 代表此处需要 `encodeURIComponent`。

@@ -4,13 +4,20 @@ draft: false
 weight: 40
 ---
 
-由于使用CDN中转时，HTTPS对CDN透明，CDN可以审查Websocket传输内容。而Trojan协议本身是明文传输，因此为保证安全性，可添加一层Shadowsocks AEAD加密层以混淆流量特征并保证安全性。
+Trojan-Go 支持使用 WebSocket 承载 Trojan 流量，以便在 CDN 或常见 Web 基础设施后面转发代理连接。
 
-**如果你使用的是中国境内运营商提供的CDN，请务必开启AEAD加密**
+当前实现主要位于：
 
-开启AEAD加密后，Websocket承载的流量将被Shadowsocks AEAD加密，头部具体格式参见Shadowsocks白皮书。
+- `src/internal/transport/layer/websocket`
+- `src/internal/transport/outbound/shadowsocks`
 
-开启Websocket支持后，协议栈如下：
+由于 CDN 可以看到 WebSocket 的传输内容，而 Trojan 协议本身并不提供额外的内容加密，因此如果 WebSocket 流量经过不可信中间层，通常建议叠加 Shadowsocks AEAD。
+
+**如果你使用中国境内运营商提供的 CDN，建议开启 AEAD 加密。**
+
+启用 AEAD 后，WebSocket 承载的数据会先经过 Shadowsocks AEAD 再进入 Trojan 协议层。
+
+典型协议栈如下：
 
 | 协议        | 备注             |
 | ----------- | ---------------- |
@@ -18,6 +25,8 @@ weight: 40
 | SimpleSocks | 如果开启多路复用 |
 | smux        | 如果开启多路复用 |
 | Trojan      |                  |
-| Shadowsocks | 如果开启加密     |
+| Shadowsocks | 如果开启 AEAD    |
 | Websocket   |                  |
-| 传输层协议  |                  |
+| 传输层协议  | 例如 TLS         |
+
+因此，WebSocket 在 Trojan-Go 中更适合作为一个“可叠加传输层”，而不是独立的代理协议本身。

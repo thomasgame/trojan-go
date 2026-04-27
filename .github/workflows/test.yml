@@ -5,8 +5,9 @@ on:
       - master
     paths:
       - "**/*.go"
-      - "go.mod"
-      - "go.sum"
+      - "go.work"
+      - "src/go.mod"
+      - "src/go.sum"
       - ".github/workflows/test.yml"
   pull_request:
     types: [opened, synchronize, reopened]
@@ -14,8 +15,9 @@ on:
       - master
     paths:
       - "**/*.go"
-      - "go.mod"
-      - "go.sum"
+      - "go.work"
+      - "src/go.mod"
+      - "src/go.sum"
       - ".github/workflows/test.yml"
 jobs:
   test:
@@ -35,9 +37,9 @@ jobs:
 
       - name: Check Go modules
         run: |
-          go mod tidy -compat=1.17
-          git diff --exit-code go.mod go.sum
-          go mod verify
+          go -C src mod tidy -compat=1.17
+          git diff --exit-code src/go.mod src/go.sum
+          go -C src mod verify
 
       - name: Test
         run: make test

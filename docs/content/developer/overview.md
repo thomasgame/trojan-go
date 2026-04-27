@@ -3,123 +3,172 @@ title: "基本介绍"
 draft: false
 weight: 1
 ---
+当前仓库已经完成一次较大规模的结构收口。现在的核心原则是：
 
-Trojan-Go的核心部分有
+- 仓库根目录只保留工作区级文件，例如 `README.md`、`docs/`、`example/`、`Makefile`、`Dockerfile`、CI 配置等
+- 所有 Go 代码统一位于 `src/`，`src/go.mod` 是真正的模块根
+- 运行时实现默认进入 `src/internal/...`
+- 仅对外稳定暴露的能力进入 `src/pkg/...`
+- 编译期功能选择使用 `src/build/...`
 
-- tunnel 各个协议具体实现
-
-- proxy 代理核心
-
-- config 配置注册和解析模块
-
-- redirector 主动检测欺骗模块
-
-- statistics 用户认证和统计模块
-
-可以在对应文件夹中找到相关源代码。
-
-## tunnel.Tunnel隧道
-
-Trojan-Go将所有协议（包括路由功能等）抽象为隧道(tunnel.Tunnel接口)，每个隧道可开启服务端（tunnel.Server接口）和客户端（tunnel.Client）。每个服务端可以从其底层隧道中，剥离并接受流（tunnel.Conn）和包（tunnel.PacketConn)。客户端可以向底层隧道，创建流和包。
-
-每个隧道并不关心其下方的隧道是什么，但是每个隧道清楚知道这个它上方的其他隧道的相关信息。
-
-所有隧道需要下层提供流或包传输支持，或两者都要求提供。所有隧道必须向上层隧道提供流传输支持，但不一定提供包传输。
-
-隧道可能只有服务端，也可能只有客户端，也可能两者皆有。两者皆有的隧道，可被用于作为Trojan-Go客户端和服务端间的传输隧道。
-
-注意，请区分Trojan-Go的服务端/客户端，和隧道的服务端/客户端的区别。下面是一个方便理解的图例。
+## 当前目录分层
 
 ```text
-
-  入站                              GFW                                  出站
--------->隧道A服务端->隧道B客户端 ----------------> 隧道B服务端->隧道C客户端----------->
-           (Trojan-Go客户端)                          (Trojan-Go服务端)
-
+src/
+  cmd/
+    trojan-go/
+  build/
+  internal/
+    app/
+    control/
+    core/
+    infra/
+    transport/
+  pkg/
+  common/
+  constant/
+  config/
+  mobilebind/
 ```
 
-最底层的隧道为传输层，即不从其他隧道获取或者创建流和包的隧道，充当上图中隧道A或者C的角色。
+各层职责如下：
 
-- transport，可插拔传输层
+- `cmd/`
+  进程入口。`cmd/trojan-go/main.go` 只负责调用 bootstrap，不直接承载业务逻辑。
 
-- socks，socks5代理，仅隧道服务端
-  
-- tproxy，透明代理，仅隧道服务端
+- `build/`
+  编译期装配层。这里通过 build tags 和空导入来决定启用哪些运行模式与可选功能。
 
-- dokodemo，反向代理，仅隧道服务端
+- `internal/app/`
+  应用层。负责启动流程、运行模式、选项注册和可执行特性。
 
-- freedom，自由出站，仅隧道客户端
+- `internal/control/`
+  控制面。包括 gRPC 服务和 CLI 控制入口。
 
-这几个隧道直接从TCP/UDP Socket创建流和包，不接受为其底层添加的任何隧道。
+- `internal/core/`
+  核心抽象与编排。这里放协议抽象、代理编排、配置注册、鉴权接口、转发原语等。
 
-其他隧道，只要下层能满足上层对包和流传输的需求，则原则上可以任何方式，任何数量进行组合和堆叠。这些隧道在上图中充当隧道B的角色，他们有
+- `internal/infra/`
+  基础设施实现。包括日志、统计、地理数据库等底层实现。
 
-- trojan
+- `internal/transport/`
+  具体协议实现，按角色拆分为入站、出站和可叠加传输层。
 
-- websocket
+- `pkg/`
+  对外稳定导出的公共能力。目前主要是 `pkg/sharelink` 和 `pkg/version`。
 
-- mux
+- `common/`
+  通用但相对纯粹的基础工具函数，仍作为共享底层保留。
 
-- simplesocks
+- `config/`
+  兼容入口。当前仍保留旧导入路径，但真实实现已转到 `internal/core/config`。
 
-- tls
+- `mobilebind/`
+  移动端对外入口，保留顶层路径以维持外部调用兼容性。
 
-- router，路由功能，仅隧道客户端
+## 启动与依赖方向
 
-他们都不关心其下层隧道实现。但可以根据到来的流和包，将其分发给上层隧道。
+当前推荐从下面的路径理解程序启动过程：
 
-例如，在这张图中，是一个典型的Trojan-Go客户端和服务端，各个隧道自下往上堆叠的顺序是：
+```mermaid
+flowchart TD
+  cmdMain[cmdMain] --> bootstrap[bootstrap]
+  bootstrap --> buildLayer[buildLayer]
+  buildLayer --> appWiring[appWiring]
+  appWiring --> appModes[appModes]
+  appModes --> coreLayer[coreLayer]
+  coreLayer --> transportLayer[transportLayer]
+  coreLayer --> controlLayer[controlLayer]
+  coreLayer --> infraLayer[infraLayer]
+```
 
-- 隧道A: transport->socks
+可以把它理解成：
 
-- 隧道B: transport->tls->trojan
+1. `cmd` 进入 `bootstrap`
+2. `bootstrap` 触发 `build` 装配
+3. `build` 导入 `internal/app/wiring/...`
+4. `wiring` 注册运行模式、控制面和可选特性
+5. 运行模式调用 `internal/core` 的代理编排能力
+6. `core` 再依赖 `transport`、`infra`、`control` 中的具体实现
 
-- 隧道C: freedom
+## transport 的拆分方式
 
-实际上的隧道堆叠的情况会比这个更复杂一些。通常的入站的隧道是一棵多叉树的形式，而非一条链。具体解释参考下文。
+以前所有协议都放在统一的 `tunnel/` 目录下，现在已经按运行角色拆成三类：
 
-## proxy.Proxy代理核心
+- `internal/transport/inbound/`
+  监听侧协议，例如 `adapter`、`dokodemo`、`http`、`socks`、`tproxy`
 
-代理核心的作用，是监听上述隧道进行组合堆叠并形成的协议栈，将所有的入站协议栈（多个隧道Server的终端节点，见下）中抽取的流和包，以及对应元信息，转送给出站协议栈（一个隧道Client）。
+- `internal/transport/outbound/`
+  出站侧协议，例如 `freedom`、`shadowsocks`、`simplesocks`、`trojan`
 
-注意，这里的入站协议栈可以有多个，如客户端可以同时从Socks5和HTTP协议栈中抽取流和包，服务端可以同时从Websocket承载的Trojan协议，和TLS承载的Trojan协议中抽取流和包等。但是出站协议栈只能有一个，如只使用TLS承载的Trojan协议出站。
+- `internal/transport/layer/`
+  可叠加承载层，例如 `tls`、`websocket`、`mux`、`router`、`transport`
 
-为了描述入站协议栈（隧道服务端）的组合和堆叠方式，使用一棵多叉树对所有协议栈进行描述。你可以在proxy文件夹中各组件，看到构建树的过程。
+这样做之后，阅读代码时可以更快判断一个包在协议栈里的角色，而不是先读实现再反推它属于入站、出站还是中间层。
 
-而出站协议栈则比较简单，使用一个简单列表即可描述。
+## core 的职责边界
 
-所以实际上，对于一个典型的开启了Websocket和Mux的客户端/服务端，上图的隧道堆叠模型为：
+`internal/core/` 现在主要负责“规则”和“编排”，而不是具体协议本身：
 
-客户端
+- `core/tunnel`
+  协议抽象、元数据和统一接口
 
-- 入站（树）
-  - transport (根)
-    - adapter 能够识别HTTP和Socks流量并分发给上层协议
-      - http （终端节点）
-      - socks（终端节点）
+- `core/proxy`
+  入站树和出站链的组装、代理运行时核心
 
-- 出站(链)
-  - transport (根)
-  - tls
-  - websocket
-  - trojan
-  - mux
-  - simplesocks
+- `core/auth`
+  用户认证与统计相关抽象
 
-服务端
+- `core/config`
+  配置注册和配置注入
 
-- 入站（树）
-  - transport (根)
-    - tls 能够识别HTTP和非HTTP流量并分发
-      - websocket
-        - trojan（终端节点）
-          - mux
-            - simplesocks （终端节点）
-      - trojan 能够识别mux和普通trojan流量并分发（终端节点）
-        - mux
-          - simplesocks （终端节点）
+- `core/relay`
+  通用双向转发能力与相关原语
 
-- 出站（链）
-  - freedom
+这层的目标是保持稳定，让上层启动逻辑和下层协议实现都围绕这组抽象协作。
 
-注意，代理核心只从隧道构成的树的终端节点抽取流和包，并转送到唯一的出站上。多个终端节点的设计的目的，是使Trojan-Go同时兼容Websocket和Trojan协议入站连接，开启/未开启Mux的入站连接，以及HTTP/Socks5自动识别的功能。每个拥有多个儿子的树上节点，具有精确识别和分发流和包给不同的儿子节点的能力。这符合我们假定每个协议了解其上层承载协议的假设。
+## app 层的职责边界
+
+`internal/app/` 解决的是“程序怎么跑起来”，而不是“协议如何收发数据”。
+
+当前大致分成三块：
+
+- `app/bootstrap`
+  统一启动入口
+
+- `app/runtime/options`
+  全局命令选项注册与调度
+
+- `app/mode/*`
+  运行模式，例如 client、server、forward、nat、custom
+
+- `app/features/*`
+  CLI 级附加功能，例如 easy、URL 模式、version
+
+## 哪些包是兼容层
+
+当前仍保留少量兼容路径，主要用于降低一次性迁移的破坏面：
+
+- `config/`
+  继续可被旧代码导入，但内部只是转发到 `internal/core/config`
+
+- `mobilebind/`
+  继续保留顶层公共路径
+
+- `main.go`
+  仍保留在 `src/` 下作为兼容入口，但推荐使用 `cmd/trojan-go/main.go` 理解实际入口
+
+## 阅读代码的建议顺序
+
+如果你第一次进入这个仓库，推荐按下面顺序阅读：
+
+1. `src/cmd/trojan-go/main.go`
+2. `src/internal/app/bootstrap`
+3. `src/build`
+4. `src/internal/app/wiring`
+5. `src/internal/app/mode`
+6. `src/internal/core/proxy`
+7. `src/internal/core/tunnel`
+8. `src/internal/transport`
+
+这样能先建立“程序如何启动”的整体心智，再去看具体协议实现。
