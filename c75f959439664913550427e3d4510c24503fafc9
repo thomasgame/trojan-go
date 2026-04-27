@@ -1,0 +1,24 @@
+Dockerfile
+  8ccfd41b5801b411 1-2,4-14,22-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.20",
+  "base_commit_sha": "c75f959439664913550427e3d4510c24503fafc9",
+  "prompts": {
+    "8ccfd41b5801b411": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ee290fb0-c16c-4d71-b876-05a086015a54",
+        "model": "gpt-5.5"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 15,
+      "total_deletions": 15,
+      "accepted_lines": 15,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/e100950cd38503638467c0bf125bf628abf674f649153b1f8de4690ffce23610"
+    }
+  }
+}
