@@ -1,0 +1,24 @@
+.gitignore
+  8ccfd41b5801b411 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.20",
+  "base_commit_sha": "0e8eb48b56ff33189367714e9fc109cc0930e1e8",
+  "prompts": {
+    "8ccfd41b5801b411": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ee290fb0-c16c-4d71-b876-05a086015a54",
+        "model": "gpt-5.5"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/3bde232f4bba05b3bc4aba3c57023badafea1c79f467c1ee62f648d573d4668f"
+    }
+  }
+}
