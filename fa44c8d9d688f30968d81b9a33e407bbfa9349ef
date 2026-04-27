@@ -1,0 +1,157 @@
+docs/content/developer/api.md
+  11eb3d858f304639 7,28
+src/config/config.go
+  11eb3d858f304639 1-18
+docs/content/developer/simplesocks.md
+  11eb3d858f304639 7,9,11,13-18,28
+README.md
+  006381eac4201042 1,242
+  11eb3d858f304639 3,5-6,8,10,12,15-24,26,28,30,32-34,36,38-40,42,44-46,48,50-52,54,56-63,65,67-75,77,79,81,83,85-90,92,94-97,99,102-105,108,111-115,117-138,141-162,164-171,173,175-181,199,212,218,224,226-227,229-230
+src/internal/app/features/urlmode/option.go
+  11eb3d858f304639 1-12,15-193
+src/pkg/sharelink/sharelink.go
+  11eb3d858f304639 1-220
+src/internal/control/grpc/api.proto
+  11eb3d858f304639 1-85
+src/pkg/sharelink/sharelink_test.go
+  11eb3d858f304639 1-257
+.github/workflows/test.yml
+  11eb3d858f304639 8-10,18-20,40-42
+docs/content/developer/url.md
+  11eb3d858f304639 25-29
+docs/content/developer/build.md
+  11eb3d858f304639 7,19,25-26,29,31,34-36,42
+.github/workflows/nightly-build.yml
+  11eb3d858f304639 7-9,18-20
+src/mobilebind/mobilebind.go
+  4db2715366308100 1-9,11-116
+docs/content/developer/mux.md
+  11eb3d858f304639 7,9,11-18,22-24,26
+docs/content/developer/plugin.md
+  11eb3d858f304639 7,9,11-13,15,17,19,21,23,25-27,29,31,33,35-38,40,42,44-46
+Makefile
+  11eb3d858f304639 7,10,31
+.gitignore
+  8ccfd41b5801b411 1-3,11,13-15,19-23,27-63
+go.work
+  11eb3d858f304639 1-3
+docs/content/developer/overview.md
+  11eb3d858f304639 6,8-12,14,16-32,34,36-37,39-40,42-43,45-46,48-49,51-52,54-55,57-58,60-61,63-67,69,71,73-82,85,87-92,94,96,98-99,101-102,104-105,107,109,111,113-114,116-117,119-120,122-123,125-126,128,130,132,134,136-137,139-140,142-143,145-146,148,150,152-153,155-156,158-159,161,163,165-172,174
+src/internal/app/features/urlmode/option_test.go
+  11eb3d858f304639 1-46
+src/internal/app/wiring/features/other/register.go
+  11eb3d858f304639 1-6
+docs/project-structure.md
+  11eb3d858f304639 1-163
+docs/content/developer/trojan.md
+  11eb3d858f304639 7,9,11-13,21-28
+src/internal/app/wiring/base/base.go
+  11eb3d858f304639 1-7
+docs/content/developer/websocket.md
+  11eb3d858f304639 7,9,11-12,14,16-20,28,30-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.20",
+  "base_commit_sha": "fa44c8d9d688f30968d81b9a33e407bbfa9349ef",
+  "prompts": {
+    "006381eac4201042": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "8c8611b8-71d3-4221-adb4-08cc31608590",
+        "model": "gpt-5.4"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 9,
+      "total_deletions": 9,
+      "accepted_lines": 5,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/e64c1c391a440d33b2e74d6fd6c690bfcab9ea9d126a760bc234d9bfd12568bc"
+    },
+    "11eb3d858f304639": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d4bbdfac-4c10-4831-ba4d-fa7fb50ace81",
+        "model": "gpt-5.4"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 1846,
+      "total_deletions": 468,
+      "accepted_lines": 1766,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/cb00567d388a4c763a6879333b606b38ddd725412d635c870513febcd006fe8c"
+    },
+    "244a2389033ecca1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "887daff7-b149-4bd9-9ead-c5ec11ca2781",
+        "model": "gpt-5.4"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 90,
+      "total_deletions": 0,
+      "accepted_lines": 86,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/be2d12d6b9652528224085ac73985cb5d445f6d9b46d1298f0b19d382d278bca"
+    },
+    "4db2715366308100": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "600d532f-8029-45aa-b781-a8616dc8ec25",
+        "model": "gpt-5.4"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 116,
+      "total_deletions": 0,
+      "accepted_lines": 115,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/247aeb96a4a9a0b5db7efe48afef78a043f07779d7ba4a4681be2bc9b32af5a6"
+    },
+    "8ccfd41b5801b411": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ee290fb0-c16c-4d71-b876-05a086015a54",
+        "model": "gpt-5.5"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 49,
+      "total_deletions": 10,
+      "accepted_lines": 49,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/75e39e7c8539efd0aed88bf4566b6a60f9b480b5905f72795729f8d359f4aeca"
+    },
+    "99e4e56cfe851218": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c4846d4d-bf08-49c3-a2e7-d70031d49025",
+        "model": "gpt-5.4-medium"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 30,
+      "total_deletions": 10,
+      "accepted_lines": 3,
+      "overriden_lines": 3,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/8970caa9477c605c56331dd82c0f63e55404e7b649410ac7f69ca4d024a0c6eb"
+    },
+    "d65de808b84943d6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "92c9fc41-4d02-4009-aff9-653c9d70ad74",
+        "model": "gpt-5.4"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 200,
+      "total_deletions": 21,
+      "accepted_lines": 198,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/3f2c30a908d70c6584c8881774524548d6ce0d0fb862a4642ced6e8f624e96c1"
+    }
+  }
+}
