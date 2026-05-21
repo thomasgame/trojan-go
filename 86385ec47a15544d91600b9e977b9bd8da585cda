@@ -1,0 +1,32 @@
+src/mobilebind/mobilebind_test.go
+  70c6f1e4d30c59a5 1-210
+src/internal/transport/layer/tls/client.go
+  70c6f1e4d30c59a5 120
+src/mobilebind/mobilebind.go
+  70c6f1e4d30c59a5 4-8,10-11,13,21-25,62-64,135-396
+src/internal/transport/layer/tls/tls_test.go
+  70c6f1e4d30c59a5 359-386
+src/tools.go
+  70c6f1e4d30c59a5 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.20",
+  "base_commit_sha": "86385ec47a15544d91600b9e977b9bd8da585cda",
+  "prompts": {
+    "70c6f1e4d30c59a5": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2f15b4af-90d6-44e4-b66f-846d59460fb1",
+        "model": "gpt-5.5"
+      },
+      "human_author": "luping.zhao <luping.zhao@xinfei.cn>",
+      "messages": [],
+      "total_additions": 634,
+      "total_deletions": 107,
+      "accepted_lines": 528,
+      "overriden_lines": 0,
+      "messages_url": "https://codeaiapi.xinfei-inc.cn1/cas/125e51075c8dce0e4d7d7935a4c934cfd55ca6f0d39fa19a52b7598c40ac5774"
+    }
+  }
+}
