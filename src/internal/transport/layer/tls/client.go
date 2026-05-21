@@ -117,7 +117,7 @@ func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 		helloID:       helloID,
 	}
 
-	if cfg.TLS.CertPath != "" {
+	if cfg.TLS.Verify && cfg.TLS.CertPath != "" {
 		caCertByte, err := ioutil.ReadFile(cfg.TLS.CertPath)
 		if err != nil {
 			return nil, common.NewError("failed to load cert file").Base(err)

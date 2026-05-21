@@ -356,6 +356,34 @@ func TestUTLSECC(t *testing.T) {
 	}
 }
 
+func TestClientDoesNotReadCertWhenVerifyDisabled(t *testing.T) {
+	clientCfg := &Config{
+		TLS: TLSConfig{
+			Verify:   false,
+			CertPath: "not-exist-client-ca.pem",
+			SNI:      "localhost",
+		},
+	}
+	ctx := config.WithConfig(context.Background(), Name, clientCfg)
+	if _, err := NewClient(ctx, nil); err != nil {
+		t.Fatalf("verify=false should not read CertPath: %v", err)
+	}
+}
+
+func TestClientReadsCertWhenVerifyEnabled(t *testing.T) {
+	clientCfg := &Config{
+		TLS: TLSConfig{
+			Verify:   true,
+			CertPath: "not-exist-client-ca.pem",
+			SNI:      "localhost",
+		},
+	}
+	ctx := config.WithConfig(context.Background(), Name, clientCfg)
+	if _, err := NewClient(ctx, nil); err == nil {
+		t.Fatal("verify=true should read CertPath and fail for missing file")
+	}
+}
+
 func TestMatch(t *testing.T) {
 	if !isDomainNameMatched("*.google.com", "www.google.com") {
 		t.Fail()
